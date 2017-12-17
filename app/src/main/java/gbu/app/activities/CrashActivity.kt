@@ -1,9 +1,9 @@
-package gby.app.activities
+package gbu.app.activities
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.TextView
-import gby.app.R
+import gbu.app.R
 
 abstract class CrashActivity : AppCompatActivity() {
     abstract fun getTitleId(): Int

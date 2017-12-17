@@ -1,12 +1,12 @@
-package gby.app
+package gbu.app
 
 import android.app.Application
 import android.content.Context
-import god.bless.you.GodInstrumentation
+import god.bless.you.app.GbuInstrumentation
 
 class App : Application() {
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
-        GodInstrumentation.init()
+        GbuInstrumentation.init()
     }
 }

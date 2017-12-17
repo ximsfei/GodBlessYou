@@ -1,4 +1,4 @@
-package god.bless.you
+package god.bless.you.app
 
 import android.annotation.TargetApi
 import android.app.Activity
@@ -14,7 +14,7 @@ import android.os.*
 import android.view.KeyEvent
 import android.view.MotionEvent
 
-open class InstrumentationImpl(private val base: Instrumentation) : Instrumentation() {
+open class InstrumentationWrapper(private val base: Instrumentation) : Instrumentation() {
     override fun getComponentName(): ComponentName {
         return base.componentName
     }

@@ -1,4 +1,4 @@
-package gby.app
+package gbu.app
 
 import org.junit.Test
 

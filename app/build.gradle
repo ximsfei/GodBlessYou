@@ -7,7 +7,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "gby.app"
+        applicationId "gbu.app"
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 1

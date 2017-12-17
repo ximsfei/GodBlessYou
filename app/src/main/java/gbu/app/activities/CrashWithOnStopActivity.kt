@@ -1,6 +1,6 @@
-package gby.app.activities
+package gbu.app.activities
 
-import gby.app.R
+import gbu.app.R
 
 class CrashWithOnStopActivity : CrashActivity() {
     override fun getTitleId(): Int {

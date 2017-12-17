@@ -1,7 +1,7 @@
-package gby.app.activities
+package gbu.app.activities
 
 import android.os.Bundle
-import gby.app.R
+import gbu.app.R
 
 class CrashWithOnCreateActivity : CrashActivity() {
     override fun getTitleId(): Int {

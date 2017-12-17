@@ -1,4 +1,4 @@
-package god.bless.you
+package god.bless.you.app
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -8,25 +8,25 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
 
-class GodInstrumentation(base: Instrumentation) : InstrumentationImpl(base) {
+class GbuInstrumentation(base: Instrumentation) : InstrumentationWrapper(base) {
     companion object {
-        fun init() {
-            Inner.init()
-        }
-    }
-    private object Inner {
+        private var initialized: Boolean = false
+
         @SuppressLint("PrivateApi")
         fun init() {
-            val clazz =Class.forName("android.app.ActivityThread")
-            val currentActivityThreadMethod = clazz.getDeclaredMethod("currentActivityThread")
-            currentActivityThreadMethod.isAccessible = true
-            val currentActivityThread = currentActivityThreadMethod.invoke(null)
-            val mInstrumentationField = clazz.getDeclaredField("mInstrumentation")
-            mInstrumentationField.isAccessible = true
-            val mInstrumentation: Instrumentation = mInstrumentationField.get(currentActivityThread) as Instrumentation
-            if (mInstrumentation !is GodInstrumentation) {
-                val godInstrumentation = GodInstrumentation(mInstrumentation)
-                mInstrumentationField.set(currentActivityThread, godInstrumentation)
+            if (!initialized) {
+                val clazz = Class.forName("android.app.ActivityThread")
+                val currentActivityThreadMethod = clazz.getDeclaredMethod("currentActivityThread")
+                currentActivityThreadMethod.isAccessible = true
+                val currentActivityThread = currentActivityThreadMethod.invoke(null)
+                val mInstrumentationField = clazz.getDeclaredField("mInstrumentation")
+                mInstrumentationField.isAccessible = true
+                val mInstrumentation: Instrumentation = mInstrumentationField.get(currentActivityThread) as Instrumentation
+                if (mInstrumentation !is GbuInstrumentation) {
+                    val godInstrumentation = GbuInstrumentation(mInstrumentation)
+                    mInstrumentationField.set(currentActivityThread, godInstrumentation)
+                }
+                initialized = true
             }
         }
     }
