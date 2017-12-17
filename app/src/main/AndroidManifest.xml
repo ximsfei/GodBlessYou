@@ -3,6 +3,7 @@
     package="gby.app">
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -16,6 +17,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activities.CrashWithOnCreateActivity" />
+        <activity android:name=".activities.CrashWithOnStartActivity" />
+        <activity android:name=".activities.CrashWithOnResumeActivity" />
+        <activity android:name=".activities.CrashWithOnPauseActivity" />
+        <activity android:name=".activities.CrashWithOnStopActivity" />
+        <activity android:name=".activities.CrashWithOnDestroyActivity" />
     </application>
 
 </manifest>
