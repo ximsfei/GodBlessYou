@@ -8,29 +8,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
 
-class GbuInstrumentation(base: Instrumentation) : InstrumentationWrapper(base) {
-    companion object {
-        private var initialized: Boolean = false
-
-        @SuppressLint("PrivateApi")
-        fun init() {
-            if (!initialized) {
-                val clazz = Class.forName("android.app.ActivityThread")
-                val currentActivityThreadMethod = clazz.getDeclaredMethod("currentActivityThread")
-                currentActivityThreadMethod.isAccessible = true
-                val currentActivityThread = currentActivityThreadMethod.invoke(null)
-                val mInstrumentationField = clazz.getDeclaredField("mInstrumentation")
-                mInstrumentationField.isAccessible = true
-                val mInstrumentation: Instrumentation = mInstrumentationField.get(currentActivityThread) as Instrumentation
-                if (mInstrumentation !is GbuInstrumentation) {
-                    val godInstrumentation = GbuInstrumentation(mInstrumentation)
-                    mInstrumentationField.set(currentActivityThread, godInstrumentation)
-                }
-                initialized = true
-            }
-        }
-    }
-
+class InstrumentationImpl(base: Instrumentation) : InstrumentationWrapper(base) {
     override fun callApplicationOnCreate(app: Application?) {
         try {
             super.callApplicationOnCreate(app)
