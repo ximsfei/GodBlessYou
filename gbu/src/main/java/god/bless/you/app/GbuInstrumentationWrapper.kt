@@ -14,7 +14,7 @@ import android.os.*
 import android.view.KeyEvent
 import android.view.MotionEvent
 
-open class InstrumentationWrapper(private val base: Instrumentation) : Instrumentation() {
+open class GbuInstrumentationWrapper(private val base: Instrumentation) : Instrumentation() {
     override fun getComponentName(): ComponentName {
         return base.componentName
     }

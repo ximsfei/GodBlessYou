@@ -1,10 +1,10 @@
 package god.bless.you
 
 import android.content.Context
-import god.bless.you.app.ActivityThread
+import god.bless.you.app.GbuActivityThread
 
 object Gbu {
     fun init(context: Context) {
-        ActivityThread.init()
+        GbuActivityThread.init()
     }
 }

@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">GodBlessYou</string>
+    <string name="crash_with_view_onClick">Crash with View.onClick</string>
+
     <string name="crash_with_activity_onCreate">Crash with Activity.onCreate</string>
     <string name="crash_with_activity_onStart">Crash with Activity.onStart</string>
     <string name="crash_with_activity_onResume">Crash with Activity.onResume</string>

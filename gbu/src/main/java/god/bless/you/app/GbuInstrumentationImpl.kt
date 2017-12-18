@@ -1,14 +1,23 @@
 package god.bless.you.app
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import android.app.Instrumentation
+import android.content.BroadcastReceiver
 import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
+import god.bless.you.content.GbuBroadcastReceiver
 
-class InstrumentationImpl(base: Instrumentation) : InstrumentationWrapper(base) {
+class GbuInstrumentationImpl(base: Instrumentation) : GbuInstrumentationWrapper(base) {
+
+    override fun onException(obj: Any?, e: Throwable?): Boolean {
+        if (obj is BroadcastReceiver) {
+            GbuBroadcastReceiver.setPendingResult(obj, null)
+        }
+        return true
+    }
+
     override fun callApplicationOnCreate(app: Application?) {
         try {
             super.callApplicationOnCreate(app)

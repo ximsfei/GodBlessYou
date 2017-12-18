@@ -19,12 +19,15 @@ import gbu.app.services.*
 
 class MainActivity : AppCompatActivity() {
     companion object {
+        private val TYPE_NONE = 0
         private val TYPE_ACTIVITY = 1
         private val TYPE_SERVICE = 2
         private val TYPE_RECEIVER = 3
         private val mItems: ArrayList<Item> = ArrayList()
 
         init {
+            mItems.add(Item(R.string.crash_with_view_onClick, TYPE_NONE, null))
+
             mItems.add(Item(R.string.crash_with_activity_onCreate, TYPE_ACTIVITY, CrashWithOnCreateActivity::class.java))
             mItems.add(Item(R.string.crash_with_activity_onStart, TYPE_ACTIVITY, CrashWithOnStartActivity::class.java))
             mItems.add(Item(R.string.crash_with_activity_onResume, TYPE_ACTIVITY, CrashWithOnResumeActivity::class.java))
@@ -45,6 +48,7 @@ class MainActivity : AppCompatActivity() {
 
         fun start(context: Context, item: Item) {
             when (item.type) {
+                TYPE_NONE -> throw RuntimeException(context.getString(R.string.crash_with_view_onClick))
                 TYPE_ACTIVITY -> context.startActivity(Intent(context, item.clazz))
                 TYPE_RECEIVER -> context.sendBroadcast(Intent(context, item.clazz))
                 TYPE_SERVICE -> {
@@ -134,5 +138,5 @@ class MainActivity : AppCompatActivity() {
         val mBtn: Button = itemView.findViewById(R.id.btn)
     }
 
-    data class Item(val name: Int, val type: Int, val clazz: Class<*>)
+    data class Item(val name: Int, val type: Int, val clazz: Class<*>?)
 }
