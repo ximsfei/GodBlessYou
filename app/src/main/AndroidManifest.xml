@@ -31,6 +31,8 @@
         <service android:name=".services.CrashWithOnUnbindService" />
         <service android:name=".services.CrashWithOnRebindService" />
         <service android:name=".services.CrashWithOnDestroyService" />
+
+        <receiver android:name=".receivers.CrashWithOnReceiveReceiver" />
     </application>
 
 </manifest>

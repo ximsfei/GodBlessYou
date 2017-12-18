@@ -14,12 +14,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import gbu.app.activities.*
+import gbu.app.receivers.CrashWithOnReceiveReceiver
 import gbu.app.services.*
 
 class MainActivity : AppCompatActivity() {
     companion object {
         private val TYPE_ACTIVITY = 1
         private val TYPE_SERVICE = 2
+        private val TYPE_RECEIVER = 3
         private val mItems: ArrayList<Item> = ArrayList()
 
         init {
@@ -37,11 +39,14 @@ class MainActivity : AppCompatActivity() {
             mItems.add(Item(R.string.crash_with_service_onUnbind, TYPE_SERVICE, CrashWithOnUnbindService::class.java))
             mItems.add(Item(R.string.crash_with_service_onRebind, TYPE_SERVICE, CrashWithOnRebindService::class.java))
             mItems.add(Item(R.string.crash_with_service_onDestroy, TYPE_SERVICE, CrashWithOnDestroyService::class.java))
+
+            mItems.add(Item(R.string.crash_with_receiver_onReceive, TYPE_RECEIVER, CrashWithOnReceiveReceiver::class.java))
         }
 
         fun start(context: Context, item: Item) {
             when (item.type) {
                 TYPE_ACTIVITY -> context.startActivity(Intent(context, item.clazz))
+                TYPE_RECEIVER -> context.sendBroadcast(Intent(context, item.clazz))
                 TYPE_SERVICE -> {
                     when (item.clazz) {
                         CrashWithOnCreateService::class.java -> {
