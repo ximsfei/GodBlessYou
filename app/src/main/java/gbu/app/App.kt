@@ -8,5 +8,6 @@ class App : Application() {
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
         Gbu.init(this)
+        Gbu.DEBUG = true
     }
 }
