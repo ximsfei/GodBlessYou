@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
         fun start(context: Context, item: Item) {
             when (item.type) {
-                TYPE_NONE -> throw RuntimeException(context.getString(R.string.crash_with_view_onClick))
+                TYPE_NONE -> Thread { throw RuntimeException(context.getString(R.string.crash_with_view_onClick)) }.start()
                 TYPE_ACTIVITY -> context.startActivity(Intent(context, item.clazz))
                 TYPE_RECEIVER -> context.sendBroadcast(Intent(context, item.clazz))
                 TYPE_SERVICE -> {

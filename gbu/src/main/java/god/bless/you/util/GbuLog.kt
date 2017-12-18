@@ -4,8 +4,8 @@ import android.util.Log
 import god.bless.you.Gbu
 
 object GbuLog {
-    private val TAG = GbuLog::class.simpleName
+    private val TAG = "GbuLog"
     fun d(msg: String) {
-        if (Gbu.DEBUG) Log.d(TAG, msg)
+        if (Gbu.debug) Log.d(TAG, msg)
     }
 }

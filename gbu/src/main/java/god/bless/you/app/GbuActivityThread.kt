@@ -86,7 +86,6 @@ object GbuActivityThread {
     private var mInstrumentationField: Field? = null
     private var mServicesField: Field?
     private var mHField: Field? = null
-    private var mInitialized = false
     private var mMsg: Message? = null
 
     init {
@@ -99,23 +98,18 @@ object GbuActivityThread {
         mHField?.isAccessible = true
         mServicesField = mActivityThreadClass?.getDeclaredField("mServices")
         mServicesField?.isAccessible = true
-    }
 
-    fun init() {
-        if (!mInitialized) {
-            val mInstrumentation: Instrumentation = getInstrumentation()
-            if (mInstrumentation !is GbuInstrumentationImpl) {
-                val instrumentationImpl = GbuInstrumentationImpl(mInstrumentation)
-                mInstrumentationField?.set(currentActivityThread(), instrumentationImpl)
-            }
+        val mInstrumentation: Instrumentation = getInstrumentation()
+        if (mInstrumentation !is GbuInstrumentationImpl) {
+            val instrumentationImpl = GbuInstrumentationImpl(mInstrumentation)
+            mInstrumentationField?.set(currentActivityThread(), instrumentationImpl)
+        }
 
-            val mCallbackField = Handler::class.java.getDeclaredField("mCallback")
-            mCallbackField.isAccessible = true
-            val mCallback: Handler.Callback? = mCallbackField.get(getH()) as Handler.Callback?
-            if (mCallback !is HCallback) {
-                mCallbackField.set(getH(), HCallback(mCallback))
-            }
-            mInitialized = true
+        val mCallbackField = Handler::class.java.getDeclaredField("mCallback")
+        mCallbackField.isAccessible = true
+        val mCallback: Handler.Callback? = mCallbackField.get(getH()) as Handler.Callback?
+        if (mCallback !is HCallback) {
+            mCallbackField.set(getH(), HCallback(mCallback))
         }
     }
 
@@ -199,7 +193,7 @@ object GbuActivityThread {
     }
 
     fun handleException(obj: Any?) {
-        if (Gbu.DEBUG) {
+        if (Gbu.debug) {
             GbuLog.d(codeToString(mMsg?.what!!))
         }
         if (obj is Service) {

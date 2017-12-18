@@ -1,12 +1,25 @@
 package god.bless.you
 
-import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import god.bless.you.app.GbuActivityThread
 
 object Gbu {
-    var DEBUG = false
+    var debug = false
 
-    fun init(context: Context) {
-        GbuActivityThread.init()
+    init {
+        Handler(Looper.getMainLooper()).post {
+            while (true) {
+                try {
+                    Looper.loop()
+                } catch (e: Throwable) {
+                    e.printStackTrace()
+                }
+            }
+        }
+        Thread.setDefaultUncaughtExceptionHandler { _: Thread, throwable: Throwable ->
+            throwable.printStackTrace()
+        }
+        GbuActivityThread
     }
 }
