@@ -1,0 +1,88 @@
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+version = publishVersion
+group = "god.bless.you"
+
+def siteUrl = 'https://github.com/ximsfei/GodBlessYou'
+def gitUrl = 'https://github.com/ximsfei/GodBlessYou.git'
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives'] //When uploading configuration files
+    pkg {
+        repo = "ximsfei"
+        name = moduleName
+        desc = descContent
+        websiteUrl = siteUrl
+        issueTrackerUrl = 'https://github.com/ximsfei/GodBlessYou/issues'
+        vcsUrl = gitUrl
+        licenses = ['Apache-2.0']
+        labels = ['android', 'apk', 'No crash']
+        publicDownloadNumbers = true
+    }
+}
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'aar'
+                name moduleName
+                url siteUrl
+                licenses {
+                    license {
+                        name 'Apache-2.0'
+                        url 'https://github.com/ximsfei/GodBlessYou/blob/master/LICENSE'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'ximsfei'
+                        name 'Pengfeng Wang'
+                        email 'ximsfei@gmail.com'
+                    }
+                }
+                scm {
+                    connection 'https://github.com/ximsfei/GodBlessYou.git'
+                    developerConnection 'https://github.com/ximsfei/GodBlessYou.git'
+                    url siteUrl
+
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+//    source = android.sourceSets.main.java.srcDirs
+//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+task findConventions << {
+    println project.getConvention()
+}
