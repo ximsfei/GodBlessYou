@@ -23,6 +23,14 @@
         <activity android:name="gbu.app.activities.CrashWithOnPauseActivity" />
         <activity android:name="gbu.app.activities.CrashWithOnStopActivity" />
         <activity android:name="gbu.app.activities.CrashWithOnDestroyActivity" />
+
+        <service android:name=".services.CrashWithOnCreateService" />
+        <service android:name=".services.CrashWithOnStartCommandService" />
+        <service android:name=".services.CrashWithOnStartService" />
+        <service android:name=".services.CrashWithOnBindService" />
+        <service android:name=".services.CrashWithOnUnbindService" />
+        <service android:name=".services.CrashWithOnRebindService" />
+        <service android:name=".services.CrashWithOnDestroyService" />
     </application>
 
 </manifest>

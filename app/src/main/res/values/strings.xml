@@ -6,4 +6,12 @@
     <string name="crash_with_activity_onPause">Crash with Activity.onPause</string>
     <string name="crash_with_activity_onStop">Crash with Activity.onStop</string>
     <string name="crash_with_activity_onDestroy">Crash with Activity.onDestroy</string>
+
+    <string name="crash_with_service_onCreate">Crash with Service.onCreate</string>
+    <string name="crash_with_service_onStartCommand">Crash with Service.onStartCommand</string>
+    <string name="crash_with_service_onStart">Crash with Service.onStart</string>
+    <string name="crash_with_service_onBind">Crash with Service.onBind</string>
+    <string name="crash_with_service_onUnbind">Crash with Service.onUnbind</string>
+    <string name="crash_with_service_onRebind">Crash with Service.onRebind</string>
+    <string name="crash_with_service_onDestroy">Crash with Service.onDestroy</string>
 </resources>
