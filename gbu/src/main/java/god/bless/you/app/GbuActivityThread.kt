@@ -204,8 +204,7 @@ object GbuActivityThread {
                 BIND_SERVICE -> handleBindService(obj)
                 UNBIND_SERVICE -> handleUnbindService(obj)
             }
-        }
-        if (obj is BroadcastReceiver) {
+        } else if (obj is BroadcastReceiver) {
             GbuBroadcastReceiver.setPendingResult(obj, null)
         }
     }
