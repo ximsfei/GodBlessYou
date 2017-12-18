@@ -240,4 +240,4 @@ object Gbu {
 
 email: ximsfei@gmail.com
 
-## [LICENSE Apache 2.0](LICENSE)
+## [License Apache 2.0](LICENSE)
