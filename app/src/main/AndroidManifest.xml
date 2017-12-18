@@ -24,13 +24,27 @@
         <activity android:name="gbu.app.activities.CrashWithOnStopActivity" />
         <activity android:name="gbu.app.activities.CrashWithOnDestroyActivity" />
 
-        <service android:name=".services.CrashWithOnCreateService" />
-        <service android:name=".services.CrashWithOnStartCommandService" />
-        <service android:name=".services.CrashWithOnStartService" />
-        <service android:name=".services.CrashWithOnBindService" />
-        <service android:name=".services.CrashWithOnUnbindService" />
-        <service android:name=".services.CrashWithOnRebindService" />
-        <service android:name=".services.CrashWithOnDestroyService" />
+        <service
+            android:name=".services.CrashWithOnCreateService"
+            android:process=":create_service" />
+        <service
+            android:name=".services.CrashWithOnStartCommandService"
+            android:process=":start_command_service" />
+        <service
+            android:name=".services.CrashWithOnStartService"
+            android:process=":start_service" />
+        <service
+            android:name=".services.CrashWithOnBindService"
+            android:process=":bind_service" />
+        <service
+            android:name=".services.CrashWithOnUnbindService"
+            android:process=":unbind_service" />
+        <service
+            android:name=".services.CrashWithOnRebindService"
+            android:process=":rebind_service" />
+        <service
+            android:name=".services.CrashWithOnDestroyService"
+            android:process=":destroy_service" />
 
         <receiver android:name=".receivers.CrashWithOnReceiveReceiver" />
     </application>

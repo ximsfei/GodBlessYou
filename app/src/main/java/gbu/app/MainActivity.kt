@@ -59,25 +59,25 @@ class MainActivity : AppCompatActivity() {
                         }
                         CrashWithOnStartCommandService::class.java -> {
                             context.startService(Intent(context, item.clazz))
-                            context.stopService(Intent(context, item.clazz))
+//                            context.stopService(Intent(context, item.clazz))
                         }
                         CrashWithOnStartService::class.java -> {
                             context.startService(Intent(context, item.clazz))
-                            context.stopService(Intent(context, item.clazz))
+//                            context.stopService(Intent(context, item.clazz))
                         }
                         CrashWithOnBindService::class.java -> {
                             context.startService(Intent(context, item.clazz))
                             val sc: ServiceConnection = SC()
                             context.bindService(Intent(context, item.clazz), sc, Context.BIND_AUTO_CREATE)
-                            context.unbindService(sc)
-                            context.stopService(Intent(context, item.clazz))
+//                            context.unbindService(sc)
+//                            context.stopService(Intent(context, item.clazz))
                         }
                         CrashWithOnUnbindService::class.java -> {
                             context.startService(Intent(context, item.clazz))
                             val sc: ServiceConnection = SC()
                             context.bindService(Intent(context, item.clazz), sc, Context.BIND_AUTO_CREATE)
                             context.unbindService(sc)
-                            context.stopService(Intent(context, item.clazz))
+//                            context.stopService(Intent(context, item.clazz))
                         }
                         CrashWithOnRebindService::class.java -> {
                             context.startService(Intent(context, item.clazz))

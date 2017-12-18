@@ -1,79 +1,93 @@
 package god.bless.you.app
 
 import android.app.Instrumentation
+import android.app.Service
+import android.content.BroadcastReceiver
+import android.content.Intent
 import android.os.Handler
+import android.os.IBinder
 import android.os.Message
+import android.util.ArrayMap
 import god.bless.you.Gbu
+import god.bless.you.content.GbuBroadcastReceiver
 import god.bless.you.util.GbuLog
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 
 object GbuActivityThread {
-    val LAUNCH_ACTIVITY = 100
-    val PAUSE_ACTIVITY = 101
-    val PAUSE_ACTIVITY_FINISHING = 102
-    val STOP_ACTIVITY_SHOW = 103
-    val STOP_ACTIVITY_HIDE = 104
-    val SHOW_WINDOW = 105
-    val HIDE_WINDOW = 106
-    val RESUME_ACTIVITY = 107
-    val SEND_RESULT = 108
-    val DESTROY_ACTIVITY = 109
-    val BIND_APPLICATION = 110
-    val EXIT_APPLICATION = 111
-    val NEW_INTENT = 112
-    val RECEIVER = 113
-    val CREATE_SERVICE = 114
-    val SERVICE_ARGS = 115
-    val STOP_SERVICE = 116
+    /** Type for IActivityManager.serviceDoneExecuting: anonymous operation  */
+    private val SERVICE_DONE_EXECUTING_ANON = 0
+    /** Type for IActivityManager.serviceDoneExecuting: done with an onStart call  */
+    private val SERVICE_DONE_EXECUTING_START = 1
+    /** Type for IActivityManager.serviceDoneExecuting: done stopping (destroying) service  */
+    private val SERVICE_DONE_EXECUTING_STOP = 2
 
-    val CONFIGURATION_CHANGED = 118
-    val CLEAN_UP_CONTEXT = 119
-    val GC_WHEN_IDLE = 120
-    val BIND_SERVICE = 121
-    val UNBIND_SERVICE = 122
-    val DUMP_SERVICE = 123
-    val LOW_MEMORY = 124
-    val ACTIVITY_CONFIGURATION_CHANGED = 125
-    val RELAUNCH_ACTIVITY = 126
-    val PROFILER_CONTROL = 127
-    val CREATE_BACKUP_AGENT = 128
-    val DESTROY_BACKUP_AGENT = 129
-    val SUICIDE = 130
-    val REMOVE_PROVIDER = 131
-    val ENABLE_JIT = 132
-    val DISPATCH_PACKAGE_BROADCAST = 133
-    val SCHEDULE_CRASH = 134
-    val DUMP_HEAP = 135
-    val DUMP_ACTIVITY = 136
-    val SLEEPING = 137
-    val SET_CORE_SETTINGS = 138
-    val UPDATE_PACKAGE_COMPATIBILITY_INFO = 139
-    val TRIM_MEMORY = 140
-    val DUMP_PROVIDER = 141
-    val UNSTABLE_PROVIDER_DIED = 142
-    val REQUEST_ASSIST_CONTEXT_EXTRAS = 143
-    val TRANSLUCENT_CONVERSION_COMPLETE = 144
-    val INSTALL_PROVIDER = 145
-    val ON_NEW_ACTIVITY_OPTIONS = 146
-    val CANCEL_VISIBLE_BEHIND = 147
-    val BACKGROUND_VISIBLE_BEHIND_CHANGED = 148
-    val ENTER_ANIMATION_COMPLETE = 149
-    val START_BINDER_TRACKING = 150
-    val STOP_BINDER_TRACKING_AND_DUMP = 151
-    val MULTI_WINDOW_MODE_CHANGED = 152
-    val PICTURE_IN_PICTURE_MODE_CHANGED = 153
-    val LOCAL_VOICE_INTERACTION_STARTED = 154
-    val ATTACH_AGENT = 155
-    val APPLICATION_INFO_CHANGED = 156
-    val ACTIVITY_MOVED_TO_DISPLAY = 157
+    private val LAUNCH_ACTIVITY = 100
+    private val PAUSE_ACTIVITY = 101
+    private val PAUSE_ACTIVITY_FINISHING = 102
+    private val STOP_ACTIVITY_SHOW = 103
+    private val STOP_ACTIVITY_HIDE = 104
+    private val SHOW_WINDOW = 105
+    private val HIDE_WINDOW = 106
+    private val RESUME_ACTIVITY = 107
+    private val SEND_RESULT = 108
+    private val DESTROY_ACTIVITY = 109
+    private val BIND_APPLICATION = 110
+    private val EXIT_APPLICATION = 111
+    private val NEW_INTENT = 112
+    private val RECEIVER = 113
+    private val CREATE_SERVICE = 114
+    private val SERVICE_ARGS = 115
+    private val STOP_SERVICE = 116
+
+    private val CONFIGURATION_CHANGED = 118
+    private val CLEAN_UP_CONTEXT = 119
+    private val GC_WHEN_IDLE = 120
+    private val BIND_SERVICE = 121
+    private val UNBIND_SERVICE = 122
+    private val DUMP_SERVICE = 123
+    private val LOW_MEMORY = 124
+    private val ACTIVITY_CONFIGURATION_CHANGED = 125
+    private val RELAUNCH_ACTIVITY = 126
+    private val PROFILER_CONTROL = 127
+    private val CREATE_BACKUP_AGENT = 128
+    private val DESTROY_BACKUP_AGENT = 129
+    private val SUICIDE = 130
+    private val REMOVE_PROVIDER = 131
+    private val ENABLE_JIT = 132
+    private val DISPATCH_PACKAGE_BROADCAST = 133
+    private val SCHEDULE_CRASH = 134
+    private val DUMP_HEAP = 135
+    private val DUMP_ACTIVITY = 136
+    private val SLEEPING = 137
+    private val SET_CORE_SETTINGS = 138
+    private val UPDATE_PACKAGE_COMPATIBILITY_INFO = 139
+    private val TRIM_MEMORY = 140
+    private val DUMP_PROVIDER = 141
+    private val UNSTABLE_PROVIDER_DIED = 142
+    private val REQUEST_ASSIST_CONTEXT_EXTRAS = 143
+    private val TRANSLUCENT_CONVERSION_COMPLETE = 144
+    private val INSTALL_PROVIDER = 145
+    private val ON_NEW_ACTIVITY_OPTIONS = 146
+    private val CANCEL_VISIBLE_BEHIND = 147
+    private val BACKGROUND_VISIBLE_BEHIND_CHANGED = 148
+    private val ENTER_ANIMATION_COMPLETE = 149
+    private val START_BINDER_TRACKING = 150
+    private val STOP_BINDER_TRACKING_AND_DUMP = 151
+    private val MULTI_WINDOW_MODE_CHANGED = 152
+    private val PICTURE_IN_PICTURE_MODE_CHANGED = 153
+    private val LOCAL_VOICE_INTERACTION_STARTED = 154
+    private val ATTACH_AGENT = 155
+    private val APPLICATION_INFO_CHANGED = 156
+    private val ACTIVITY_MOVED_TO_DISPLAY = 157
 
     private var mActivityThreadClass: Class<*>? = null
     private var mCurrentActivityThreadMethod: Method? = null
     private var mInstrumentationField: Field? = null
+    private var mServicesField: Field?
     private var mHField: Field? = null
     private var mInitialized = false
-    private var mCode = -1
+    private var mMsg: Message? = null
 
     init {
         mActivityThreadClass = Class.forName("android.app.ActivityThread")
@@ -83,6 +97,8 @@ object GbuActivityThread {
         mInstrumentationField?.isAccessible = true
         mHField = mActivityThreadClass?.getDeclaredField("mH")
         mHField?.isAccessible = true
+        mServicesField = mActivityThreadClass?.getDeclaredField("mServices")
+        mServicesField?.isAccessible = true
     }
 
     fun init() {
@@ -111,15 +127,15 @@ object GbuActivityThread {
         return mInstrumentationField?.get(currentActivityThread()) as Instrumentation
     }
 
+    fun getServices(): ArrayMap<IBinder, Service> {
+        return mServicesField?.get(currentActivityThread()) as ArrayMap<IBinder, Service>
+    }
+
     fun getH(): Handler {
         return mHField?.get(currentActivityThread()) as Handler
     }
 
-    fun getCode(): Int {
-        return mCode
-    }
-
-    fun codeToString(code: Int): String {
+    private fun codeToString(code: Int): String {
         when (code) {
             LAUNCH_ACTIVITY -> return "LAUNCH_ACTIVITY"
             PAUSE_ACTIVITY -> return "PAUSE_ACTIVITY"
@@ -171,6 +187,8 @@ object GbuActivityThread {
             CANCEL_VISIBLE_BEHIND -> return "CANCEL_VISIBLE_BEHIND"
             BACKGROUND_VISIBLE_BEHIND_CHANGED -> return "BACKGROUND_VISIBLE_BEHIND_CHANGED"
             ENTER_ANIMATION_COMPLETE -> return "ENTER_ANIMATION_COMPLETE"
+            START_BINDER_TRACKING -> return "START_BINDER_TRACKING"
+            STOP_BINDER_TRACKING_AND_DUMP -> return "STOP_BINDER_TRACKING_AND_DUMP"
             MULTI_WINDOW_MODE_CHANGED -> return "MULTI_WINDOW_MODE_CHANGED"
             PICTURE_IN_PICTURE_MODE_CHANGED -> return "PICTURE_IN_PICTURE_MODE_CHANGED"
             LOCAL_VOICE_INTERACTION_STARTED -> return "LOCAL_VOICE_INTERACTION_STARTED"
@@ -180,14 +198,79 @@ object GbuActivityThread {
         return code.toString()
     }
 
-    private class HCallback(private val mBase: Handler.Callback?) : Handler.Callback {
-        override fun handleMessage(msg: Message?): Boolean {
-            mCode = msg?.what!!
-            if (Gbu.DEBUG) {
-                GbuLog.d(codeToString(mCode))
+    fun handleException(obj: Any?) {
+        if (Gbu.DEBUG) {
+            GbuLog.d(codeToString(mMsg?.what!!))
+        }
+        if (obj is Service) {
+            when (mMsg?.what) {
+                CREATE_SERVICE -> handleCreateService(obj)
+                SERVICE_ARGS -> handleServiceArgs(obj)
+                STOP_SERVICE -> handleStopService(obj)
+                BIND_SERVICE -> handleBindService(obj)
+                UNBIND_SERVICE -> handleUnbindService(obj)
             }
-            return mBase?.handleMessage(msg) ?: false
+        }
+        if (obj is BroadcastReceiver) {
+            GbuBroadcastReceiver.setPendingResult(obj, null)
+        }
+    }
+
+    private fun handleCreateService(service: Service) {
+        val token = GbuService.getToken(service)
+        getServices().put(token, service)
+        GbuActivityManager.serviceDoneExecuting(token, SERVICE_DONE_EXECUTING_ANON, 0, 0)
+    }
+
+    private fun handleServiceArgs(service: Service) {
+        val token = GbuService.getToken(service)
+        GbuActivityManager.serviceDoneExecuting(token, SERVICE_DONE_EXECUTING_START, 0, 0)
+    }
+
+    private fun handleStopService(service: Service) {
+        val token = GbuService.getToken(service)
+        GbuService.detachAndCleanUp(service)
+        val context = service.baseContext
+        if (GbuContextImpl.isContextImpl(context)) {
+            val who = service.javaClass.name
+            GbuContextImpl.scheduleFinalCleanup(context, who, "Service")
         }
 
+        GbuActivityManager.serviceDoneExecuting(token, SERVICE_DONE_EXECUTING_STOP, 0, 0)
+    }
+
+    private fun handleBindService(service: Service) {
+        val token = GbuService.getToken(service)
+        val rebindField = mMsg?.obj!!.javaClass.getDeclaredField("rebind")
+        rebindField.isAccessible = true
+        if (!(rebindField.get(mMsg?.obj) as Boolean)) {
+            val intentField = mMsg?.obj!!.javaClass.getDeclaredField("intent")
+            intentField.isAccessible = true
+            GbuActivityManager.publishService(token, intentField.get(mMsg?.obj) as Intent, null)
+        } else {
+            GbuActivityManager.serviceDoneExecuting(token, SERVICE_DONE_EXECUTING_ANON, 0, 0)
+        }
+    }
+
+    private fun handleUnbindService(service: Service) {
+        val token = GbuService.getToken(service)
+        // TODO: How do I get the unbind method return value
+//        val intentField = mMsg?.obj!!.javaClass.getDeclaredField("intent")
+//        intentField.isAccessible = true
+//        val doRebind = service.onUnbind(intentField.get(mMsg?.obj) as Intent)
+//        if (doRebind) {
+//            GbuActivityManager.unbindFinished(
+//                    token, intentField.get(mMsg?.obj) as Intent, doRebind)
+//        } else {
+        GbuActivityManager.serviceDoneExecuting(
+                token, SERVICE_DONE_EXECUTING_ANON, 0, 0)
+//        }
+    }
+
+    private class HCallback(private val mBase: Handler.Callback?) : Handler.Callback {
+        override fun handleMessage(msg: Message?): Boolean {
+            mMsg = msg
+            return mBase?.handleMessage(msg) ?: false
+        }
     }
 }

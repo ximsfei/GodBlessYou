@@ -3,18 +3,14 @@ package god.bless.you.app
 import android.app.Activity
 import android.app.Application
 import android.app.Instrumentation
-import android.content.BroadcastReceiver
 import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
-import god.bless.you.content.GbuBroadcastReceiver
 
 class GbuInstrumentationImpl(base: Instrumentation) : GbuInstrumentationWrapper(base) {
 
     override fun onException(obj: Any?, e: Throwable?): Boolean {
-        if (obj is BroadcastReceiver) {
-            GbuBroadcastReceiver.setPendingResult(obj, null)
-        }
+        GbuActivityThread.handleException(obj)
         return true
     }
 
