@@ -7,6 +7,10 @@ class CrashWithOnStopActivity : CrashActivity() {
         return R.string.crash_with_activity_onStop
     }
 
+    override fun getContentId(): Int {
+        return R.string.fix_with_activity_onStop
+    }
+
     override fun onStop() {
         super.onStop()
         throw RuntimeException(getString(getTitleId()))

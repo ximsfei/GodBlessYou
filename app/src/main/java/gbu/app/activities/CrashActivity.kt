@@ -7,6 +7,7 @@ import gbu.app.R
 
 abstract class CrashActivity : AppCompatActivity() {
     abstract fun getTitleId(): Int
+    abstract fun getContentId(): Int
 
     private var mContent: TextView? = null
 
@@ -15,6 +16,6 @@ abstract class CrashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_crash)
         setTitle(getTitleId())
         mContent = findViewById(R.id.text)
-        mContent?.setText(getTitleId())
+        mContent?.setText(getContentId())
     }
 }

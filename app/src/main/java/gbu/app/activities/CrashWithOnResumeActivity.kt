@@ -7,6 +7,10 @@ class CrashWithOnResumeActivity : CrashActivity() {
         return R.string.crash_with_activity_onResume
     }
 
+    override fun getContentId(): Int {
+        return R.string.fix_with_activity_onResume
+    }
+
     override fun onResume() {
         super.onResume()
         throw RuntimeException(getString(getTitleId()))
