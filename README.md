@@ -1,8 +1,8 @@
 # GodBlessYou
 
-![gbu-0.0.1](https://img.shields.io/badge/gbu-0.0.1-green.svg)
+![gbu-v0.0.1](https://img.shields.io/badge/gbu-v0.0.1-green.svg)
 ![build](https://img.shields.io/badge/build-passing-green.svg)
-![license-apache-2.0](https://img.shields.io/badge/apache--2.0-blue.svg)
+![license-apache-2.0](https://img.shields.io/badge/license-apache--2.0-blue.svg)
 
 In English | [中文](README_CN.md)
 
