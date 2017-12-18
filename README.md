@@ -20,7 +20,7 @@ You can download an [apk]() of the demo project.
   * [Fix BroadcastReceiver Crash](#fix-service-and-broadcastreceiver-crash)
   * [Fix Other Crash](#fix-other-crash)
 * [About Author](#about-author)
-* [LICENSE](#license-apache-2.0)
+* [LICENSE](#license-apache-20)
 
 ## Gradle Dependency
 
@@ -49,7 +49,7 @@ class App : Application() {
 
 ### Fix Activity Crash
 
-Gbu 'fix' the crash in the Activity lifecycle by hooking `ActivityThread`'s member `mInstrumentation`
+GBU 'fix' the crash in the Activity lifecycle by hooking `ActivityThread`'s member `mInstrumentation`.
 
 > GbuInstrumentationImpl.kt
 
@@ -177,13 +177,16 @@ override fun callActivityOnRestoreInstanceState(activity: Activity?, savedInstan
 
 ### Fix Service and BroadcastReceiver Crash
 
-Gbu 'fix' the crash in the Service&BroadcastReceiver lifecycle by hooking `Instrumentation`'s method `onException`
+GBU 'fix' the crash in the Service and BroadcastReceiver lifecycle by hooking `Instrumentation`'s method `onException`.
 
 > GbuInstrumentationImpl.kt
 
 ```kotlin
 class GbuInstrumentationImpl(base: Instrumentation) : GbuInstrumentationWrapper(base) {
 
+    /**
+     * If true is returned, the system will proceed as if the exception didn't happen.
+     */
     override fun onException(obj: Any?, e: Throwable?): Boolean {
         GbuActivityThread.handleException(obj)
         return true
@@ -195,6 +198,9 @@ class GbuInstrumentationImpl(base: Instrumentation) : GbuInstrumentationWrapper(
 
 ```kotlin
 object GbuActivityThread {
+    /**
+     * Prevent incomplete lifecycle leads to anr.
+     */
     fun handleException(obj: Any?) {
         if (Gbu.debug) {
             GbuLog.d(codeToString(mMsg?.what!!))
@@ -220,6 +226,7 @@ object GbuActivityThread {
 object Gbu {
     init {
         Handler(Looper.getMainLooper()).post {
+            // Do not let the main thread exit.
             while (true) {
                 try {
                     Looper.loop()
@@ -228,6 +235,7 @@ object Gbu {
                 }
             }
         }
+        // Catch all threads crashes
         Thread.setDefaultUncaughtExceptionHandler { _: Thread, throwable: Throwable ->
             throwable.printStackTrace()
         }

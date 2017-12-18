@@ -20,13 +20,11 @@ GBU 尝试在运行时修复Android应用的崩溃问题，在使部分功能失
   * [修复BroadcastReceiver中的Crash](#修复service和broadcastreceiver中的crash)
   * [修复其他Crash](#修复其他crash)
 * [关于作者](#关于作者)
-* [LICENSE](#license-apache-2.0)
+* [LICENSE](#license-apache-20)
 
 ## 导入
 
-The Gradle Dependency is available via [jCenter](https://bintray.com/pengfeng/ximsfei/gbu)
-
-Add dependencies directly
+在`build.gradle`中直接添加依赖
 
 ```
 implementation 'god.bless.you:gbu:0.0.1'
@@ -34,7 +32,7 @@ implementation 'god.bless.you:gbu:0.0.1'
 
 ## 使用
 
-Integrate with kotlin
+在Application中初始化
 
 ```
 class App : Application() {
@@ -49,7 +47,7 @@ class App : Application() {
 
 ### 修复Activity中的Crash
 
-Gbu 'fix' the crash in the Activity lifecycle by hooking `ActivityThread`'s member `mInstrumentation`
+GBU 通过反射`ActivityThread`的成员变量`mInstrumentation`来尝试修复`Activity`生命周期回调中的崩溃。
 
 > GbuInstrumentationImpl.kt
 
@@ -177,7 +175,7 @@ override fun callActivityOnRestoreInstanceState(activity: Activity?, savedInstan
 
 ### 修复Service和BroadcastReceiver中的Crash
 
-Gbu 'fix' the crash in the Service&BroadcastReceiver lifecycle by hooking `Instrumentation`'s method `onException`
+GBU 通过`Instrumentation`的方法`onException`返回`true`来尝试修复`Service`和`BroadcastReceiver`生命周期回调中的崩溃。
 
 > GbuInstrumentationImpl.kt
 
@@ -215,6 +213,8 @@ object GbuActivityThread {
 ```
 
 ### 修复其他Crash
+
+参照网上的一些资料实现其他崩溃的捕获，同时保证主线程不会因为崩溃而退出。
 
 ```kotlin
 object Gbu {
