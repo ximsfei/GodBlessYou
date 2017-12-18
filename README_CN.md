@@ -4,25 +4,25 @@
 ![build](https://img.shields.io/badge/build-passing-green.svg)
 ![license-apache-2.0](https://img.shields.io/badge/apache--2.0-blue.svg)
 
-In English | [中文](README_CN.md)
+[In English](README.md) | 中文
 
-GBU is an Android library that tries to fix your app when it crashes. You will never get the hated "X has stopped" dialog.
+GBU 尝试在运行时修复Android应用的崩溃问题，在使部分功能失效的前提下，让应用继续运行。使用GBU以后，应用将不再会出现"X 已停止运行"的对话框。
 
-You can download an [apk]() of the demo project.
+你可以下载[demo apk]()来体验一下.
 
-## Table of Contents
+## 内容
 
-* [Gradle Dependency](#gradle-dependency)
-* [Integration](#integration)
-* [How it works](#how-it-works)
-  * [Fix Activity Crash](#fix-activity-crash)
-  * [Fix Service Crash](#fix-service-and-broadcastreceiver-crash)
-  * [Fix BroadcastReceiver Crash](#fix-service-and-broadcastreceiver-crash)
-  * [Fix Other Crash](#fix-other-crash)
-* [About Author](#about-author)
+* [导入](#导入)
+* [使用](#使用)
+* [实现原理](#实现原理)
+  * [修复Activity中的Crash](#修复activity中的crash)
+  * [修复Service中的Crash](#修复service和broadcastreceiver中的crash)
+  * [修复BroadcastReceiver中的Crash](#修复service和broadcastreceiver中的crash)
+  * [修复其他Crash](#修复其他crash)
+* [关于作者](#关于作者)
 * [LICENSE](#license-apache-2.0)
 
-## Gradle Dependency
+## 导入
 
 The Gradle Dependency is available via [jCenter](https://bintray.com/pengfeng/ximsfei/gbu)
 
@@ -32,7 +32,7 @@ Add dependencies directly
 implementation 'god.bless.you:gbu:0.0.1'
 ```
 
-## Integration
+## 使用
 
 Integrate with kotlin
 
@@ -45,9 +45,9 @@ class App : Application() {
 }
 ```
 
-## How it works
+## 实现原理
 
-### Fix Activity Crash
+### 修复Activity中的Crash
 
 Gbu 'fix' the crash in the Activity lifecycle by hooking `ActivityThread`'s member `mInstrumentation`
 
@@ -175,7 +175,7 @@ override fun callActivityOnRestoreInstanceState(activity: Activity?, savedInstan
 }
 ```
 
-### Fix Service and BroadcastReceiver Crash
+### 修复Service和BroadcastReceiver中的Crash
 
 Gbu 'fix' the crash in the Service&BroadcastReceiver lifecycle by hooking `Instrumentation`'s method `onException`
 
@@ -214,7 +214,7 @@ object GbuActivityThread {
 }
 ```
 
-### Fix Other Crash
+### 修复其他Crash
 
 ```kotlin
 object Gbu {
@@ -234,9 +234,9 @@ object Gbu {
     }
 }
 ```
-## About Author
+## 关于作者
 
-Pengfeng Wang(王鹏锋)
+姓名: 王鹏锋
 
 email: ximsfei@gmail.com
 
