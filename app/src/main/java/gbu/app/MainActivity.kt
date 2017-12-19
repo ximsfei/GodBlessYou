@@ -16,17 +16,18 @@ import android.widget.Button
 import gbu.app.activities.*
 import gbu.app.receivers.CrashWithOnReceiveReceiver
 import gbu.app.services.*
+import god.bless.you.Gbu
 
 class MainActivity : AppCompatActivity() {
     companion object {
-        private val TYPE_NONE = 0
+        private val TYPE_OPEN = 0
         private val TYPE_ACTIVITY = 1
         private val TYPE_SERVICE = 2
         private val TYPE_RECEIVER = 3
         private val mItems: ArrayList<Item> = ArrayList()
 
         init {
-            mItems.add(Item(R.string.crash_with_view_onClick, TYPE_NONE, null))
+            mItems.add(Item(R.string.open_gbu, TYPE_OPEN, null))
 
             mItems.add(Item(R.string.crash_with_activity_onCreate, TYPE_ACTIVITY, CrashWithOnCreateActivity::class.java))
             mItems.add(Item(R.string.crash_with_activity_onStart, TYPE_ACTIVITY, CrashWithOnStartActivity::class.java))
@@ -48,7 +49,7 @@ class MainActivity : AppCompatActivity() {
 
         fun start(context: Context, item: Item) {
             when (item.type) {
-                TYPE_NONE -> Thread { throw RuntimeException(context.getString(R.string.crash_with_view_onClick)) }.start()
+                TYPE_OPEN -> Gbu.debug = true
                 TYPE_ACTIVITY -> context.startActivity(Intent(context, item.clazz))
                 TYPE_RECEIVER -> context.sendBroadcast(Intent(context, item.clazz))
                 TYPE_SERVICE -> {

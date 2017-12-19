@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">GodBlessYou</string>
-    <string name="crash_with_view_onClick">Crash with View.onClick</string>
+    <string name="open_gbu">Click to open GBU</string>
+    <string name="close_gbu">Click to close GBU</string>
 
     <string name="crash_with_activity_onCreate">Crash with Activity.onCreate</string>
     <string name="fix_with_activity_onCreate">Crash with Activity.onCreate fixed</string>
