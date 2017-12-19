@@ -13,21 +13,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import gbu.app.activities.*
 import gbu.app.receivers.CrashWithOnReceiveReceiver
 import gbu.app.services.*
 import god.bless.you.Gbu
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
     companion object {
         private val TYPE_OPEN = 0
-        private val TYPE_ACTIVITY = 1
-        private val TYPE_SERVICE = 2
-        private val TYPE_RECEIVER = 3
+        private val TYPE_CLOSE = 1
+        private val TYPE_ACTIVITY = 2
+        private val TYPE_SERVICE = 3
+        private val TYPE_RECEIVER = 4
         private val mItems: ArrayList<Item> = ArrayList()
 
         init {
             mItems.add(Item(R.string.open_gbu, TYPE_OPEN, null))
+            mItems.add(Item(R.string.close_gbu, TYPE_CLOSE, null))
 
             mItems.add(Item(R.string.crash_with_activity_onCreate, TYPE_ACTIVITY, CrashWithOnCreateActivity::class.java))
             mItems.add(Item(R.string.crash_with_activity_onStart, TYPE_ACTIVITY, CrashWithOnStartActivity::class.java))
@@ -49,7 +53,14 @@ class MainActivity : AppCompatActivity() {
 
         fun start(context: Context, item: Item) {
             when (item.type) {
-                TYPE_OPEN -> Gbu.debug = true
+                TYPE_OPEN -> {
+                    Gbu.debug = true
+                    File(context.filesDir, "open_gbu").createNewFile()
+                }
+                TYPE_CLOSE -> {
+                    File(context.filesDir, "open_gbu").delete()
+                    Toast.makeText(context, "You need to kill the process manually", Toast.LENGTH_SHORT).show();
+                }
                 TYPE_ACTIVITY -> context.startActivity(Intent(context, item.clazz))
                 TYPE_RECEIVER -> context.sendBroadcast(Intent(context, item.clazz))
                 TYPE_SERVICE -> {
