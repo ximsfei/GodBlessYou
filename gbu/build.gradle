@@ -34,7 +34,7 @@ repositories {
 }
 
 ext {
-    publishVersion = '0.0.1'
+    publishVersion = '0.0.2'
     moduleName = 'gbu'
     descContent = 'God bless your apk doesn\'t crash'
 }

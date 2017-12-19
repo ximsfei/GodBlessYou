@@ -1,6 +1,6 @@
 # GodBlessYou
 
-![gbu](https://img.shields.io/badge/gbu-0.0.1-green.svg)
+![gbu](https://img.shields.io/badge/gbu-0.0.2-green.svg)
 ![build](https://img.shields.io/badge/build-passing-green.svg)
 ![license-apache-2.0](https://img.shields.io/badge/Apache-2.0-blue.svg)
 
@@ -29,7 +29,7 @@ The Gradle Dependency is available via [jCenter](https://bintray.com/pengfeng/xi
 Add dependencies directly
 
 ```
-implementation 'god.bless.you:gbu:0.0.1'
+implementation 'god.bless.you:gbu:0.0.2'
 ```
 
 ## Integration
@@ -40,7 +40,11 @@ Integrate with kotlin
 class App : Application() {
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
-        Gbu
+        Gbu.init(this)
+                .setDebug(true)
+                .enableLifecycleCrash(true)
+                .enableOtherCrash(false)
+                .install()
     }
 }
 ```

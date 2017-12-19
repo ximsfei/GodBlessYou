@@ -6,7 +6,7 @@ import android.os.Looper
 import god.bless.you.app.GbuActivityThread
 
 object Gbu {
-    private var debug = false
+    var debug = false
     private var enableLifecycleCrash = true
     private var enableCommonCrash = false
 
