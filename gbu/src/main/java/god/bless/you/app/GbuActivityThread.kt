@@ -7,7 +7,6 @@ import android.content.Intent
 import android.os.Handler
 import android.os.IBinder
 import android.os.Message
-import android.util.ArrayMap
 import god.bless.you.Gbu
 import god.bless.you.content.GbuBroadcastReceiver
 import god.bless.you.util.GbuLog
@@ -121,8 +120,8 @@ object GbuActivityThread {
         return mInstrumentationField?.get(currentActivityThread()) as Instrumentation
     }
 
-    fun getServices(): ArrayMap<IBinder, Service> {
-        return mServicesField?.get(currentActivityThread()) as ArrayMap<IBinder, Service>
+    fun getServices(): java.util.Map<IBinder, Service> {
+        return mServicesField?.get(currentActivityThread()) as java.util.Map<IBinder, Service>
     }
 
     fun getH(): Handler {
