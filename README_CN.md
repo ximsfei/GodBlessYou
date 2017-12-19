@@ -8,7 +8,7 @@
 
 GBU 尝试在运行时修复Android应用的崩溃问题，在使部分功能失效的前提下，让应用继续运行。使用GBU以后，应用将不再会出现"X 已停止运行"的对话框。
 
-你可以下载[demo apk]()来体验一下.
+你可以下载[demo apk](https://raw.githubusercontent.com/ximsfei/Res/master/gbu/gbu.apk)来体验一下.
 
 ## 内容
 

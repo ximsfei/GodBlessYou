@@ -8,7 +8,7 @@ In English | [中文](README_CN.md)
 
 GBU is an Android library that tries to fix your app when it crashes. You will never get the hated "X has stopped" dialog.
 
-You can download an [apk]() of the demo project.
+You can download an [apk](https://raw.githubusercontent.com/ximsfei/Res/master/gbu/gbu.apk) of the demo project.
 
 ## Table of Contents
 
