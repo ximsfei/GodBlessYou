@@ -54,7 +54,11 @@ class MainActivity : AppCompatActivity() {
         fun start(context: Context, item: Item) {
             when (item.type) {
                 TYPE_OPEN -> {
-                    Gbu.debug = true
+                    Gbu.init(context.applicationContext)
+                            .setDebug(true)
+                            .enableLifecycleCrash(true)
+                            .enableOtherCrash(false)
+                            .install()
                     File(context.filesDir, "open_gbu").createNewFile()
                 }
                 TYPE_CLOSE -> {

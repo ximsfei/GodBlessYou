@@ -9,7 +9,11 @@ class App : Application() {
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
         if (File(base?.filesDir, "open_gbu").exists()) {
-            Gbu
+            Gbu.init(this)
+                    .setDebug(true)
+                    .enableLifecycleCrash(true)
+                    .enableOtherCrash(false)
+                    .install()
         }
     }
 }
