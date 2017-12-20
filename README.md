@@ -53,7 +53,7 @@ class App : Application() {
 
 ### Fix Activity Crash
 
-GBU 'fix' the crash in the Activity lifecycle by hooking `ActivityThread`'s member `mInstrumentation`.
+GBU 'fix' the crash in the Activity lifecycle by hooking `ActivityThread`'s field `mInstrumentation`.
 
 > GbuInstrumentationImpl.kt
 
